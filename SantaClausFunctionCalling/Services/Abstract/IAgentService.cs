@@ -4,5 +4,5 @@ namespace SantaClausFunctionCalling.Services.Abstract;
 
 public interface IAgentService
 {
-    Task<string> Agent(AgentRequest agentRequest);
+    Task<AgentResponse> Agent(AgentRequest agentRequest);
 }

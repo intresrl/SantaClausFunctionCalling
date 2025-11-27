@@ -19,7 +19,13 @@ public static class SantaClausEndpoints
             async ([FromServices] IAgentService agentService, [FromBody] AgentRequest request) =>
             {
                 var response = await agentService.Agent(request);
-                return Results.Ok(response);
+                return Results.Ok(new
+                {
+                    agentResponse = response.AgentResponseText,
+                    naughtyList = response.NaughtyList,
+                    niceList = response.NiceList,
+                    santaLetter = response.SantaLetter
+                });
             })
         .WithSummary("Send a message to the AI Agent")
         .WithDescription("Interact with the AI-powered Santa Claus agent.");
