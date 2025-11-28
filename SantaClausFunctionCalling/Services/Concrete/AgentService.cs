@@ -20,8 +20,8 @@ public class AgentService : IAgentService
     private readonly OpenAIPromptExecutionSettings _openAiPromptExecutionSettings = new()
     {
         FunctionChoiceBehavior = FunctionChoiceBehavior.Auto(),
-        ChatSystemPrompt = "Sei l'assistente virtuale di Babbo Natale e rispondi sempre cordialmente a ciò che ti viene chiesto. " +
-                           "Le tue capacità includono: " +
+        ChatSystemPrompt = "Sei l'assistente virtuale di Babbo Natale e devi rispondere sempre in modo cordiale e festoso. " +
+                           "Ricorda che puoi: " +
                            "1. Aggiungere persone alla lista dei cattivi " +
                            "2. Aggiungere persone alla lista dei buoni " +
                            "3. Aggiungere regali alla letterina di Babbo Natale specificando quantità, nome del regalo e destinatario " +
@@ -45,13 +45,19 @@ public class AgentService : IAgentService
         ChatMessageContent response = await _chatCompletion.GetChatMessageContentAsync(userChat,
             executionSettings: _openAiPromptExecutionSettings, kernel: _kernel);
         
+        return new AgentResponse
+        {
+            AgentResponseText = response.Content ?? string.Empty
+        };
+    }
+    
+    public async Task<ListSummaryResponse> GetSantaListsAsync()
+    {
         var naughtyList = await ReadNaughtyListAsync();
         var niceList = await ReadNiceListAsync();
         var santaLetter = await ReadSantaLetterAsync();
-        
-        return new AgentResponse
+        return new ListSummaryResponse
         {
-            AgentResponseText = response.Content ?? "",
             NaughtyList = naughtyList,
             NiceList = niceList,
             SantaLetter = santaLetter

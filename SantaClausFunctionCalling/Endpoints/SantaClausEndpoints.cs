@@ -21,14 +21,19 @@ public static class SantaClausEndpoints
                 var response = await agentService.Agent(request);
                 return Results.Ok(new
                 {
-                    agentResponse = response.AgentResponseText,
-                    naughtyList = response.NaughtyList,
-                    niceList = response.NiceList,
-                    santaLetter = response.SantaLetter
+                    agentResponse = response.AgentResponseText
                 });
             })
         .WithSummary("Send a message to the AI Agent")
         .WithDescription("Interact with the AI-powered Santa Claus agent.");
+
+        group.MapGet("/lists", async ([FromServices] IAgentService agentService) =>
+        {
+            var lists = await agentService.GetSantaListsAsync();
+            return Results.Ok(lists);
+        })
+        .WithSummary("Ottieni gli elenchi di Babbo Natale")
+        .WithDescription("Recupera lista dei cattivi, dei buoni e la letterina attuale.");
         
 
         return app;
